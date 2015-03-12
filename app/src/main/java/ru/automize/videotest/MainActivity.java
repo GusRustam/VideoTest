@@ -3,6 +3,7 @@ package ru.automize.videotest;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -43,8 +44,14 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void startWebServer(View view) {
-        Toast.makeText(this, "start", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, WebServer.class);
+        WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
+        int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
+        final String formattedIpAddress = String.format("%d.%d.%d.%d", (ipAddress & 0xff), (ipAddress >> 8 & 0xff),
+                (ipAddress >> 16 & 0xff), (ipAddress >> 24 & 0xff));
+
+        Toast.makeText(this, "Please access! http://" + formattedIpAddress + ":" + 8080, Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(this, WebServerService.class);
         startService(intent);
 
         updateServiceStatus();
@@ -66,12 +73,12 @@ public class MainActivity extends ActionBarActivity {
 
     private void updateServiceStatus() {
         TextView text = (TextView) findViewById(R.id.server_status);
-        text.setText(isMyServiceRunning(WebServer.class) ? "Running" : "Stopped");
+        text.setText(isMyServiceRunning(WebServerService.class) ? "Running" : "Stopped");
     }
 
     public void stopWebServer(View view) {
         Toast.makeText(this, "stop", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, WebServer.class);
+        Intent intent = new Intent(this, WebServerService.class);
         stopService(intent);
 
         updateServiceStatus();

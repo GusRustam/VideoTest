@@ -17,7 +17,7 @@ import fi.iki.elonen.NanoHTTPD;
  * TODO: Customize class - update intent actions, extra parameters and static
  * helper methods.
  */
-public class WebServer extends IntentService {
+public class WebServerService extends IntentService {
 //    // TODO: Rename actions, choose action names that describe tasks that this
 //    // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
 //    private static final String ACTION_FOO = "ru.automize.videotest.action.FOO";
@@ -35,7 +35,7 @@ public class WebServer extends IntentService {
      */
 //    // TODO: Customize helper method
 //    public static void startActionFoo(Context context, String param1, String param2) {
-//        Intent intent = new Intent(context, WebServer.class);
+//        Intent intent = new Intent(context, WebServerService.class);
 //        intent.setAction(ACTION_FOO);
 //        intent.putExtra(EXTRA_PARAM1, param1);
 //        intent.putExtra(EXTRA_PARAM2, param2);
@@ -50,7 +50,7 @@ public class WebServer extends IntentService {
      */
 //    // TODO: Customize helper method
 //    public static void startActionBaz(Context context, String param1, String param2) {
-//        Intent intent = new Intent(context, WebServer.class);
+//        Intent intent = new Intent(context, WebServerService.class);
 //        intent.setAction(ACTION_BAZ);
 //        intent.putExtra(EXTRA_PARAM1, param1);
 //        intent.putExtra(EXTRA_PARAM2, param2);
@@ -60,15 +60,8 @@ public class WebServer extends IntentService {
     private NanoHTTPD _server = new EmptyServer();
     private final Object _lock = new Object();
 
-    public WebServer() {
-        super("WebServer");
-
-//        WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
-//        int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
-//        final String formattedIpAddress = String.format("%d.%d.%d.%d", (ipAddress & 0xff), (ipAddress >> 8 & 0xff),
-//                (ipAddress >> 16 & 0xff), (ipAddress >> 24 & 0xff));
-//        Toast.makeText(this, "Please access! http://" + formattedIpAddress + ":" + 8080, Toast.LENGTH_SHORT).show();
-
+    public WebServerService() {
+        super("WebServerService");
     }
 
     @Override

@@ -23,7 +23,7 @@
         </activity>
 
         <service
-            android:name=".WebServer"
+            android:name=".WebServerService"
             android:exported="false" >
         </service>
     </application>

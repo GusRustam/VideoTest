@@ -1,0 +1,7 @@
+[http]
+	proxy = http://10.1.56.10:80
+[https]
+	proxy = http://10.1.56.10:80
+[user]
+	name = Rustam
+	email = guseynov.r.v@gmail.com
