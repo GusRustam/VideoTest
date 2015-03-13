@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
 
+    private static final Class<?> _serviceClass = PersistentService.class;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,10 +46,10 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void startWebServer(View view) {
-        if (isMyServiceRunning(WebServerService.class)) {
+        if (isMyServiceRunning(_serviceClass)) {
             Toast.makeText(this, "Server already running", Toast.LENGTH_SHORT).show();
         } else {
-            Intent intent = new Intent(this, WebServerService.class);
+            Intent intent = new Intent(this, _serviceClass);
             startService(intent);
 
             updateServiceStatus();
@@ -70,7 +72,7 @@ public class MainActivity extends ActionBarActivity {
 
     private void updateServiceStatus() {
         TextView text = (TextView) findViewById(R.id.server_status);
-        boolean myServiceRunning = isMyServiceRunning(WebServerService.class);
+        boolean myServiceRunning = isMyServiceRunning(_serviceClass);
         text.setText(myServiceRunning ? "Running" : "Stopped");
 
         WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
@@ -86,7 +88,7 @@ public class MainActivity extends ActionBarActivity {
 
     public void stopWebServer(View view) {
         Toast.makeText(this, "stop", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, WebServerService.class);
+        Intent intent = new Intent(this, _serviceClass);
         stopService(intent);
 
         updateServiceStatus();
