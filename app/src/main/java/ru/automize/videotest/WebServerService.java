@@ -2,10 +2,7 @@ package ru.automize.videotest;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.content.Context;
-import android.net.wifi.WifiManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -98,9 +95,6 @@ public class WebServerService extends IntentService {
     public void onCreate() {
         Log.d("SERVICE", "onCreate");
         _serverThread.start();
-        x = () -> {
-
-        };
 //        try {
 //            _server.start();
 //        } catch (IOException e) {
