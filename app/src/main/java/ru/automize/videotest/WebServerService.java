@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
 import android.net.wifi.WifiManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -57,8 +58,37 @@ public class WebServerService extends IntentService {
 //        context.startService(intent);
 //    }
 
-    private NanoHTTPD _server = new EmptyServer();
     private final Object _lock = new Object();
+
+    private Thread _serverThread = new Thread(new Runnable() {
+        private NanoHTTPD _server = new EmptyServer();
+
+        @Override
+        public void run() {
+            try {
+                Log.d("SERVER_THREAD", "starting...");
+                _server.start();
+                Log.d("SERVER_THREAD", "started");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                Log.d("SERVER_THREAD", "waiting...");
+                synchronized (_lock) {
+                    _lock.wait();
+                }
+                Log.d("SERVER_THREAD", "finished");
+            } catch (InterruptedException e) {
+                Log.d("SERVER_THREAD", "interrupted");
+                e.printStackTrace();
+            }
+
+            Log.d("SERVER_THREAD", "stopping...");
+            _server.stop();
+            Log.d("SERVER_THREAD", "stopped");
+        }
+    });
 
     public WebServerService() {
         super("WebServerService");
@@ -66,38 +96,43 @@ public class WebServerService extends IntentService {
 
     @Override
     public void onCreate() {
-        Toast.makeText(this, "onCreate()", Toast.LENGTH_SHORT).show();
-        try {
-            _server.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Log.d("SERVICE", "onCreate");
+        _serverThread.start();
+        x = () -> {
+
+        };
+//        try {
+//            _server.start();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         super.onCreate();
     }
 
     @Override
     public void onDestroy() {
-        Toast.makeText(this, "onDestroy()", Toast.LENGTH_SHORT).show();
+        Log.d("SERVICE", "onDestroy");
         synchronized (_lock) {
-            _lock.notify();
+            _lock.notifyAll();
         }
-        _server.stop();
+//        _server.stop();
         super.onDestroy();
     }
 
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Toast.makeText(this, "onHandleIntent()", Toast.LENGTH_SHORT).show();
+        Log.d("SERVICE", "onHandleIntent");
         try {
             // we are blocked until the thread is interrupted
+            Log.d("SERVICE", "to wait....");
             synchronized (_lock) {
                 _lock.wait();
             }
-            Toast.makeText(this, "onHandleIntent() DONE", Toast.LENGTH_SHORT).show();
+            Log.d("SERVICE", "onHandleIntent finished");
         } catch (InterruptedException e) {
             e.printStackTrace();
-            Toast.makeText(this, "onHandleIntent() ERR", Toast.LENGTH_SHORT).show();
+            Log.d("SERVICE", "onHandleIntent interrupted");
         }
 
 //        if (intent != null) {
