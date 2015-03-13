@@ -44,17 +44,14 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void startWebServer(View view) {
-        WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
-        int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
-        final String formattedIpAddress = String.format("%d.%d.%d.%d", (ipAddress & 0xff), (ipAddress >> 8 & 0xff),
-                (ipAddress >> 16 & 0xff), (ipAddress >> 24 & 0xff));
+        if (isMyServiceRunning(WebServerService.class)) {
+            Toast.makeText(this, "Server already running", Toast.LENGTH_SHORT).show();
+        } else {
+            Intent intent = new Intent(this, WebServerService.class);
+            startService(intent);
 
-        Toast.makeText(this, "Please access! http://" + formattedIpAddress + ":" + 8080, Toast.LENGTH_SHORT).show();
-
-        Intent intent = new Intent(this, WebServerService.class);
-        startService(intent);
-
-        updateServiceStatus();
+            updateServiceStatus();
+        }
     }
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {
@@ -73,7 +70,18 @@ public class MainActivity extends ActionBarActivity {
 
     private void updateServiceStatus() {
         TextView text = (TextView) findViewById(R.id.server_status);
-        text.setText(isMyServiceRunning(WebServerService.class) ? "Running" : "Stopped");
+        boolean myServiceRunning = isMyServiceRunning(WebServerService.class);
+        text.setText(myServiceRunning ? "Running" : "Stopped");
+
+        WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
+        int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
+        final String formattedIpAddress = String.format("%d.%d.%d.%d", (ipAddress & 0xff), (ipAddress >> 8 & 0xff),
+                (ipAddress >> 16 & 0xff), (ipAddress >> 24 & 0xff));
+
+        text = (TextView) findViewById(R.id.ip_address);
+        if (text != null) {
+            text.setText(myServiceRunning ? "Address is http://" + formattedIpAddress + ":" + 8080 : "Not started");
+        }
     }
 
     public void stopWebServer(View view) {
