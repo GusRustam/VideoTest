@@ -6,9 +6,14 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.IOException;
+
+import fi.iki.elonen.NanoHTTPD;
+
 public class PersistentService extends Service {
 
     private static final String TAG = "PersistentService";
+    private NanoHTTPD _server = new EmptyServer();
     public PersistentService() {
     }
 
@@ -20,6 +25,11 @@ public class PersistentService extends Service {
     @Override
     public void onCreate() {
         Toast.makeText(this, "Congrats! MyService Created", Toast.LENGTH_LONG).show();
+        try {
+            _server.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Log.d(TAG, "onCreate");
     }
 
@@ -33,6 +43,7 @@ public class PersistentService extends Service {
     @Override
     public void onDestroy() {
         Toast.makeText(this, "MyService Stopped", Toast.LENGTH_LONG).show();
+        _server.stop();
         Log.d(TAG, "onDestroy");
     }
 }
