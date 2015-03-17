@@ -1,9 +1,14 @@
 package ru.automize.videotest;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -38,15 +43,9 @@ public class PersistentService extends Service {
     }
 
     @Override
-    public void onStart(Intent intent, int startId) {
-        Log.d(TAG, "onStart");
-        Toast.makeText(this, "My Service Started", Toast.LENGTH_LONG).show();
-        //Note: You can start a new thread and use it for long background processing from here.
-    }
-
-    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "onStartCommand");
+
         return super.onStartCommand(intent, flags, startId);
     }
 
